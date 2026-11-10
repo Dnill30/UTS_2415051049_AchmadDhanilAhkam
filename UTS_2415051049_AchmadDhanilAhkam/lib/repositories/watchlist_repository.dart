@@ -12,4 +12,6 @@ class WatchlistRepository {
   Future<WatchlistItem> add(WatchlistItem item) => _service.insert(item);
 
   Future<WatchlistItem> update(WatchlistItem item) => _service.update(item);
+
+  Future<void> remove(int id) => _service.delete(id);
 }

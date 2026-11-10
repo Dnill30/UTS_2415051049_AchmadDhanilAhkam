@@ -20,6 +20,9 @@ class _EditWatchlistScreenState extends State<EditWatchlistScreen> {
   late String _status;
   int? _rating;
   bool _saving = false;
+  bool _deleting = false;
+
+  bool get _busy => _saving || _deleting;
 
   @override
   void initState() {
@@ -70,12 +73,70 @@ class _EditWatchlistScreenState extends State<EditWatchlistScreen> {
     );
   }
 
+  Future<void> _confirmDelete() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        icon: const Icon(Icons.delete_outline),
+        title: const Text('Hapus dari watchlist?'),
+        content: Text(
+          '"${widget.item.title}" akan dihapus dari watchlist kamu. '
+          'Tindakan ini tidak bisa dibatalkan.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Batal'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(dialogContext).colorScheme.error,
+              foregroundColor: Theme.of(dialogContext).colorScheme.onError,
+            ),
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('Hapus'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    setState(() => _deleting = true);
+
+    final error =
+        await context.read<WatchlistProvider>().remove(widget.item);
+
+    if (!mounted) return;
+    setState(() => _deleting = false);
+
+    final messenger = ScaffoldMessenger.of(context);
+    if (error != null) {
+      messenger.showSnackBar(SnackBar(content: Text(error)));
+      return;
+    }
+
+    Navigator.pop(context);
+    messenger.showSnackBar(
+      SnackBar(content: Text('"${widget.item.title}" dihapus dari watchlist')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Watchlist')),
+      appBar: AppBar(
+        title: const Text('Edit Watchlist'),
+        actions: [
+          IconButton(
+            tooltip: 'Hapus',
+            icon: const Icon(Icons.delete_outline),
+            onPressed: _busy ? null : _confirmDelete,
+          ),
+        ],
+      ),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
@@ -142,7 +203,7 @@ class _EditWatchlistScreenState extends State<EditWatchlistScreen> {
                 ),
                 const SizedBox(height: 12),
                 FilledButton.icon(
-                  onPressed: _saving ? null : _save,
+                  onPressed: _busy ? null : _save,
                   icon: _saving
                       ? const SizedBox(
                           width: 18,
@@ -151,6 +212,22 @@ class _EditWatchlistScreenState extends State<EditWatchlistScreen> {
                         )
                       : const Icon(Icons.save_outlined),
                   label: Text(_saving ? 'Menyimpan...' : 'Simpan perubahan'),
+                ),
+                const SizedBox(height: 12),
+                OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: theme.colorScheme.error,
+                  ),
+                  onPressed: _busy ? null : _confirmDelete,
+                  icon: _deleting
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.delete_outline),
+                  label: Text(
+                      _deleting ? 'Menghapus...' : 'Hapus dari Watchlist'),
                 ),
               ],
             ),

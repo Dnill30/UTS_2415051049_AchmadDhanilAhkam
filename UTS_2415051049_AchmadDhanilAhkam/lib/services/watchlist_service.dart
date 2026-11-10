@@ -64,4 +64,12 @@ class WatchlistService {
       throw DatabaseException('Gagal memperbarui: ${e.message}');
     }
   }
+
+  Future<void> delete(int id) async {
+    try {
+      await _client.from(_table).delete().eq('id', id);
+    } on PostgrestException catch (e) {
+      throw DatabaseException('Gagal menghapus: ${e.message}');
+    }
+  }
 }

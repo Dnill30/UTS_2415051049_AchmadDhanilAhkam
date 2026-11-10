@@ -79,4 +79,22 @@ class WatchlistProvider extends ChangeNotifier {
       return 'Gagal memperbarui. Periksa koneksi internet kamu.';
     }
   }
+
+  /// Mengembalikan null jika berhasil, atau pesan error jika gagal.
+  Future<String?> remove(WatchlistItem item) async {
+    final id = item.id;
+    if (id == null) return 'Data tidak punya id.';
+
+    try {
+      await _repository.remove(id);
+      _items = _items.where((e) => e.id != id).toList();
+      notifyListeners();
+      return null;
+    } on DatabaseException catch (e) {
+      return e.message;
+    } catch (e) {
+      debugPrint('watchlist remove error: $e');
+      return 'Gagal menghapus. Periksa koneksi internet kamu.';
+    }
+  }
 }
