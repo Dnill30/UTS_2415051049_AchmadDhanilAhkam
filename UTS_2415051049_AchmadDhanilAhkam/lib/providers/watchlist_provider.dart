@@ -41,4 +41,25 @@ class WatchlistProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  /// Mengembalikan null jika berhasil, atau pesan error jika gagal.
+  Future<String?> add(WatchlistItem item) async {
+    if (contains(item.movieId)) {
+      return 'Film ini sudah ada di watchlist.';
+    }
+
+    try {
+      final saved = await _repository.add(item);
+      _items = [saved, ..._items];
+      _status = LoadStatus.success;
+      _error = null;
+      notifyListeners();
+      return null;
+    } on DatabaseException catch (e) {
+      return e.message;
+    } catch (e) {
+      debugPrint('watchlist add error: $e');
+      return 'Gagal menyimpan. Periksa koneksi internet kamu.';
+    }
+  }
 }

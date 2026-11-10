@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import '../models/movie.dart';
+import '../providers/watchlist_provider.dart';
+import 'add_watchlist_screen.dart';
 
 class MovieDetailScreen extends StatelessWidget {
   final Movie movie;
@@ -81,6 +85,9 @@ class _Info extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final inWatchlist =
+        context.watch<WatchlistProvider>().contains(movie.id);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -111,14 +118,21 @@ class _Info extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           child: FilledButton.icon(
-            onPressed: () {
-              // Sementara. Nanti diganti membuka form Add to Watchlist.
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Fitur watchlist segera hadir')),
-              );
-            },
-            icon: const Icon(Icons.bookmark_add_outlined),
-            label: const Text('Tambah ke Watchlist'),
+            onPressed: inWatchlist
+                ? null
+                : () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => AddWatchlistScreen(movie: movie),
+                      ),
+                    );
+                  },
+            icon: Icon(inWatchlist
+                ? Icons.bookmark_added
+                : Icons.bookmark_add_outlined),
+            label: Text(
+                inWatchlist ? 'Sudah di Watchlist' : 'Tambah ke Watchlist'),
           ),
         ),
       ],

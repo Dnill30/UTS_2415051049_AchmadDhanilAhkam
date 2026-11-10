@@ -8,4 +8,6 @@ class WatchlistRepository {
   WatchlistRepository(this._service);
 
   Future<List<WatchlistItem>> getWatchlist() => _service.fetchAll(kStudentId);
+
+  Future<WatchlistItem> add(WatchlistItem item) => _service.insert(item);
 }

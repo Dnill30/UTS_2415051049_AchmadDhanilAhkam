@@ -27,11 +27,19 @@ class WatchlistService {
           .eq('student_id', studentId)
           .order('created_at', ascending: false);
 
-      return data
-          .map((row) => WatchlistItem.fromJson(row))
-          .toList();
+      return data.map((row) => WatchlistItem.fromJson(row)).toList();
     } on PostgrestException catch (e) {
       throw DatabaseException('Database bermasalah: ${e.message}');
+    }
+  }
+
+  Future<WatchlistItem> insert(WatchlistItem item) async {
+    try {
+      final row =
+          await _client.from(_table).insert(item.toJson()).select().single();
+      return WatchlistItem.fromJson(row);
+    } on PostgrestException catch (e) {
+      throw DatabaseException('Gagal menyimpan: ${e.message}');
     }
   }
 }
