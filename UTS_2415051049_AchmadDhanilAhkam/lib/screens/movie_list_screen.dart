@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '../data/dummy_movies.dart';
+import 'package:provider/provider.dart';
+import '../providers/movie_provider.dart';
 import '../widgets/movie_grid.dart';
+import '../widgets/state_view.dart';
 import 'movie_detail_screen.dart';
 
 class MovieListScreen extends StatelessWidget {
@@ -8,18 +10,27 @@ class MovieListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<MovieProvider>();
+
     return Scaffold(
       appBar: AppBar(title: const Text('Movies')),
-      body: MovieGrid(
-        movies: dummyMovies,
-        onMovieTap: (movie) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => MovieDetailScreen(movie: movie),
-            ),
-          );
-        },
+      body: StateView(
+        isLoading: provider.isLoading,
+        errorMessage: provider.error,
+        isEmpty: provider.isEmpty,
+        emptyMessage: 'Tidak ada film ditemukan.',
+        onRetry: () => context.read<MovieProvider>().loadPopular(),
+        child: MovieGrid(
+          movies: provider.movies,
+          onMovieTap: (movie) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => MovieDetailScreen(movie: movie),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
