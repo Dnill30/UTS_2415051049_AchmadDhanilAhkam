@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/watchlist_provider.dart';
 import '../widgets/state_view.dart';
 import '../widgets/watchlist_card.dart';
+import 'edit_watchlist_screen.dart';
 
 class WatchlistScreen extends StatelessWidget {
   const WatchlistScreen({super.key});
@@ -41,7 +42,20 @@ class WatchlistScreen extends StatelessWidget {
             mainAxisSpacing: 12,
           ),
           itemCount: provider.items.length,
-          itemBuilder: (context, i) => WatchlistCard(item: provider.items[i]),
+          itemBuilder: (context, i) {
+            final item = provider.items[i];
+            return WatchlistCard(
+              item: item,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => EditWatchlistScreen(item: item),
+                  ),
+                );
+              },
+            );
+          },
         ),
       ),
     );

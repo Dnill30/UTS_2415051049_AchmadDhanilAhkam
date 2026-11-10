@@ -42,4 +42,26 @@ class WatchlistService {
       throw DatabaseException('Gagal menyimpan: ${e.message}');
     }
   }
+
+  Future<WatchlistItem> update(WatchlistItem item) async {
+    if (item.id == null) {
+      throw const DatabaseException('Data tidak punya id.');
+    }
+    try {
+      // Map eksplisit agar rating/note bernilai null ikut tersimpan (terhapus).
+      final row = await _client
+          .from(_table)
+          .update({
+            'status': item.status,
+            'rating': item.rating,
+            'note': item.note,
+          })
+          .eq('id', item.id!)
+          .select()
+          .single();
+      return WatchlistItem.fromJson(row);
+    } on PostgrestException catch (e) {
+      throw DatabaseException('Gagal memperbarui: ${e.message}');
+    }
+  }
 }

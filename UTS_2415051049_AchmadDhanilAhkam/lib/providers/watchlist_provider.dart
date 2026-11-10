@@ -62,4 +62,21 @@ class WatchlistProvider extends ChangeNotifier {
       return 'Gagal menyimpan. Periksa koneksi internet kamu.';
     }
   }
+
+  /// Mengembalikan null jika berhasil, atau pesan error jika gagal.
+  Future<String?> update(WatchlistItem item) async {
+    try {
+      final saved = await _repository.update(item);
+      _items = [
+        for (final e in _items) e.id == saved.id ? saved : e,
+      ];
+      notifyListeners();
+      return null;
+    } on DatabaseException catch (e) {
+      return e.message;
+    } catch (e) {
+      debugPrint('watchlist update error: $e');
+      return 'Gagal memperbarui. Periksa koneksi internet kamu.';
+    }
+  }
 }
