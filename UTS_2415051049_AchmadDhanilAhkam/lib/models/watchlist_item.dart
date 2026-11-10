@@ -21,6 +21,15 @@ class WatchlistItem {
     this.createdAt,
   });
 
+  static const _imageBase = 'https://image.tmdb.org/t/p/w500';
+
+  String? get posterUrl =>
+      posterPath == null ? null : '$_imageBase$posterPath';
+
+  bool get isWatched => status == 'watched';
+
+  String get statusLabel => isWatched ? 'Sudah ditonton' : 'Ingin ditonton';
+
   factory WatchlistItem.fromJson(Map<String, dynamic> json) {
     return WatchlistItem(
       id: json['id'] as int?,

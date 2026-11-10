@@ -4,16 +4,19 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'providers/movie_provider.dart';
+import 'providers/watchlist_provider.dart';
 import 'repositories/movie_repository.dart';
+import 'repositories/watchlist_repository.dart';
 import 'screens/main_shell.dart';
 import 'services/movie_service.dart';
+import 'services/watchlist_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
   await Supabase.initialize(
     url: dotenv.env['SUPABASE_URL']!,
-    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+    publishableKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
   runApp(const MovieExplorerApp());
 }
@@ -23,8 +26,17 @@ class MovieExplorerApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => MovieProvider(MovieRepository(MovieService()))..init(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => MovieProvider(MovieRepository(MovieService()))..init(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) =>
+              WatchlistProvider(WatchlistRepository(WatchlistService()))
+                ..load(),
+        ),
+      ],
       child: MaterialApp(
         title: 'MovieExplorer',
         debugShowCheckedModeBanner: false,
