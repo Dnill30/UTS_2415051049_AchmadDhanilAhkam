@@ -57,6 +57,7 @@ class HomeScreen extends StatelessWidget {
                         Image.asset(
                           'assets/images/logo.png',
                           height: 32,
+                          // ignore: unnecessary_underscores
                           errorBuilder: (_, __, ___) =>
                               const Icon(Icons.movie_filter),
                         ),
