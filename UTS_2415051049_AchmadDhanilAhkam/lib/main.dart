@@ -23,11 +23,11 @@ Future<void> main() async {
     url: dotenv.env['SUPABASE_URL']!,
     publishableKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
-  runApp(const MovieExplorerApp());
+  runApp(const NilFlixApp());
 }
 
-class MovieExplorerApp extends StatelessWidget {
-  const MovieExplorerApp({super.key});
+class NilFlixApp extends StatelessWidget {
+  const NilFlixApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class MovieExplorerApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'MovieExplorer',
+        title: 'NilFlix',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.dark,
         themeMode: ThemeMode.dark,

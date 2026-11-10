@@ -111,7 +111,7 @@ class ProfileScreen extends StatelessWidget {
                     const ListTile(
                       leading: Icon(Icons.info_outline),
                       title: Text('Aplikasi'),
-                      subtitle: Text('MovieExplorer v1.0.0'),
+                      subtitle: Text('NilFlix v1.0.0'),
                     ),
                     const ListTile(
                       leading: Icon(Icons.movie_filter_outlined),

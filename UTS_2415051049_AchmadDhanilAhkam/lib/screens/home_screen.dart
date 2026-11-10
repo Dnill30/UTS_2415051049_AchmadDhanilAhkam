@@ -62,7 +62,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         const Text(
-                          'MovieExplorer',
+                          'NilFlix',
                           style: TextStyle(fontWeight: FontWeight.w800),
                         ),
                       ],
