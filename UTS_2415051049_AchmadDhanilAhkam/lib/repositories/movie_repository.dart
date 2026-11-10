@@ -9,6 +9,12 @@ class MovieRepository {
 
   Future<List<Movie>> getPopularMovies() => _service.fetchPopular();
 
+  Future<List<Movie>> getTrendingMovies() => _service.fetchTrending();
+
+  Future<List<Movie>> getTopRatedMovies() => _service.fetchTopRated();
+
+  Future<List<Movie>> getUpcomingMovies() => _service.fetchUpcoming();
+
   Future<List<Movie>> searchMovies(String query) =>
       _service.searchMovies(query);
 

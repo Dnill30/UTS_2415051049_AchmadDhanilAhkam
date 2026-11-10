@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'providers/home_provider.dart';
 import 'providers/movie_provider.dart';
 import 'providers/watchlist_provider.dart';
 import 'repositories/movie_repository.dart';
@@ -10,6 +11,7 @@ import 'repositories/watchlist_repository.dart';
 import 'screens/main_shell.dart';
 import 'services/movie_service.dart';
 import 'services/watchlist_service.dart';
+import 'theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +31,9 @@ class MovieExplorerApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
+          create: (_) => HomeProvider(MovieRepository(MovieService()))..load(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => MovieProvider(MovieRepository(MovieService()))..init(),
         ),
         ChangeNotifierProvider(
@@ -40,16 +45,8 @@ class MovieExplorerApp extends StatelessWidget {
       child: MaterialApp(
         title: 'MovieExplorer',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          useMaterial3: true,
-          colorSchemeSeed: Colors.deepPurple,
-          brightness: Brightness.light,
-        ),
-        darkTheme: ThemeData(
-          useMaterial3: true,
-          colorSchemeSeed: Colors.deepPurple,
-          brightness: Brightness.dark,
-        ),
+        theme: AppTheme.dark,
+        themeMode: ThemeMode.dark,
         home: const MainShell(),
       ),
     );

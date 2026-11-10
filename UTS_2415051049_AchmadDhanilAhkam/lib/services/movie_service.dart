@@ -63,6 +63,21 @@ class MovieService {
     return _parseMovies(json);
   }
 
+  Future<List<Movie>> fetchTrending() async {
+    final json = await _get('/trending/movie/week');
+    return _parseMovies(json);
+  }
+
+  Future<List<Movie>> fetchTopRated() async {
+    final json = await _get('/movie/top_rated');
+    return _parseMovies(json);
+  }
+
+  Future<List<Movie>> fetchUpcoming() async {
+    final json = await _get('/movie/upcoming');
+    return _parseMovies(json);
+  }
+
   Future<List<Movie>> searchMovies(String query) async {
     final json = await _get('/search/movie', {
       'query': query,
