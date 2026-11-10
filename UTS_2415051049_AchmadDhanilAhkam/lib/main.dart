@@ -24,8 +24,7 @@ class MovieExplorerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) =>
-          MovieProvider(MovieRepository(MovieService()))..loadPopular(),
+      create: (_) => MovieProvider(MovieRepository(MovieService()))..init(),
       child: MaterialApp(
         title: 'MovieExplorer',
         debugShowCheckedModeBanner: false,
