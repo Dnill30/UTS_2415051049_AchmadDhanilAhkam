@@ -5,11 +5,14 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'providers/home_provider.dart';
 import 'providers/movie_provider.dart';
+import 'providers/profile_provider.dart';
 import 'providers/watchlist_provider.dart';
 import 'repositories/movie_repository.dart';
+import 'repositories/profile_repository.dart';
 import 'repositories/watchlist_repository.dart';
 import 'screens/main_shell.dart';
 import 'services/movie_service.dart';
+import 'services/profile_service.dart';
 import 'services/watchlist_service.dart';
 import 'theme/app_theme.dart';
 
@@ -40,6 +43,10 @@ class MovieExplorerApp extends StatelessWidget {
           create: (_) =>
               WatchlistProvider(WatchlistRepository(WatchlistService()))
                 ..load(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) =>
+              ProfileProvider(ProfileRepository(ProfileService()))..load(),
         ),
       ],
       child: MaterialApp(
